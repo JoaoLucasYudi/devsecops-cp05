@@ -1,0 +1,5 @@
+.DS_Store
+.env
+.env.*
+*.pem
+trivy-baseline.txt
