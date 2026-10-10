@@ -59,14 +59,31 @@ Depois, `nginx:1.31.6-alpine` com `apk upgrade`: **0 HIGH, 0 CRITICAL**. Saída 
 
 Sabotagem local, `nginx:1.14` (Debian 9.8): **113 achados, 82 HIGH e 31 CRITICAL**. Saída em `/tmp/trivy-nginx114.txt`. A branch `sabotage/trivy` é o commit `b367cc6`.
 
+## Repositório
+
+https://github.com/JoaoLucasYudi/devsecops-cp05
+
+PRs abertas, nenhuma mergeada:
+
+- https://github.com/JoaoLucasYudi/devsecops-cp05/pull/1 `sabotage/semgrep`
+- https://github.com/JoaoLucasYudi/devsecops-cp05/pull/2 `sabotage/trivy`
+- https://github.com/JoaoLucasYudi/devsecops-cp05/pull/3 `sabotage/gitleaks`
+
 ## Runs do GitHub Actions
 
-Preencher depois do push. Para cada run: URL, run id, horário, job e trecho do log.
+Horários em Brasília (UTC-3), 10/10/2026.
 
-| Alvo | Branch | Job esperado | URL | Horário | Status |
-|---|---|---|---|---|---|
-| Baseline | main | gitleaks, semgrep, trivy | | | |
-| Prova 1 | sabotage/gitleaks | gitleaks failed | | | |
-| Prova 1, arquivo apagado | sabotage/gitleaks | gitleaks failed | | | |
-| Prova 2 | sabotage/semgrep | semgrep failed | | | |
-| Prova 3 | sabotage/trivy | trivy failed | | | |
+| Alvo | Evento | URL | Horário | Jobs |
+|---|---|---|---|---|
+| main, primeiro push | push | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092478215 | 19:43 | semgrep ok, trivy ok, gitleaks erro de faixa git (sem leak) |
+| Árvore limpa (`fix/trivy-base-image`, commit `0505fb2`) | push | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092515348 | 19:43 | gitleaks, semgrep e trivy ok |
+| Prova Semgrep | pull_request #1 | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092620833 | 19:45 | só semgrep falhou |
+| Prova Trivy | pull_request #2 | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092623192 | 19:45 | só trivy falhou. Total: 113 (HIGH: 82, CRITICAL: 31) |
+| Prova Gitleaks | pull_request #3 | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092632500 | 19:45 | só gitleaks falhou |
+| Prova Gitleaks, push do commit que apaga o arquivo | push | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092619164 | 19:45 | gitleaks falhou. RuleID `aws-access-token`, arquivo `config.js`, commit `0bf877e`. O HEAD já era `7be0924`, que remove o arquivo |
+
+O primeiro push da `main` fez o `gitleaks-action` calcular o intervalo `5cec2a0^..HEAD`. `5cec2a0` é o commit raiz e não tem pai, então o git falhou com exit code 1. O log diz `no leaks found in partial scan`. Não é um segredo na `main`. O push seguinte, de um commit que já tem pai, varre só esse commit.
+
+Trecho do Semgrep na PR 1: `javascript.browser.security.eval-detected.eval-detected`, `/src/vulnerable.js`, linha 3, blocking, exit code 1.
+
+Trecho do Trivy na PR 2: imagem `nginx:1.14`, `Total: 113 (HIGH: 82, CRITICAL: 31)`, job encerrado pelo `exit-code: 1`.
