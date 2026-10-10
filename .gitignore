@@ -3,3 +3,4 @@
 .env.*
 *.pem
 trivy-baseline.txt
+trivy-after.txt
