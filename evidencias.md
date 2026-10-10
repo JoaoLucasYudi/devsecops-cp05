@@ -76,6 +76,7 @@ Horários em Brasília (UTC-3), 10/10/2026.
 | Alvo | Evento | URL | Horário | Jobs |
 |---|---|---|---|---|
 | main, primeiro push | push | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092478215 | 19:43 | semgrep ok, trivy ok, gitleaks erro de faixa git (sem leak) |
+| main verde | push | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092856758 | 19:49 | gitleaks, semgrep e trivy ok |
 | Árvore limpa (`fix/trivy-base-image`, commit `0505fb2`) | push | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092515348 | 19:43 | gitleaks, semgrep e trivy ok |
 | Prova Semgrep | pull_request #1 | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092620833 | 19:45 | só semgrep falhou |
 | Prova Trivy | pull_request #2 | https://github.com/JoaoLucasYudi/devsecops-cp05/actions/runs/38092623192 | 19:45 | só trivy falhou. Total: 113 (HIGH: 82, CRITICAL: 31) |
